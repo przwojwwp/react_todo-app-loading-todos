@@ -10,6 +10,27 @@ type Props = {
 export const Footer = ({ todos, onFilterChange, filter }: Props) => {
   const countOfNotCompletedTodos = todos.filter(todo => !todo.completed).length;
 
+  const filterOptions: {
+    label: string;
+    value: Filter;
+    href: string;
+    dataCy: string;
+  }[] = [
+    { label: 'All', value: 'all', href: '#/', dataCy: 'FilterLinkAll' },
+    {
+      label: 'Active',
+      value: 'active',
+      href: '#/active',
+      dataCy: 'FilterLinkActive',
+    },
+    {
+      label: 'Completed',
+      value: 'completed',
+      href: '#/completed',
+      dataCy: 'FilterLinkCompleted',
+    },
+  ];
+
   return (
     <footer className="todoapp__footer" data-cy="Footer">
       {/* Hide the footer if there are no todos */}
@@ -20,7 +41,18 @@ export const Footer = ({ todos, onFilterChange, filter }: Props) => {
 
       {/* Active link should have the 'selected' class */}
       <nav className="filter" data-cy="Filter">
-        <a
+        {filterOptions.map(({ label, value, href, dataCy }) => (
+          <a
+            key={value}
+            href={href}
+            className={`filter__link ${filter === value ? 'selected' : ''}`}
+            data-cy={dataCy}
+            onClick={() => onFilterChange(value)}
+          >
+            {label}
+          </a>
+        ))}
+        {/* <a
           href="#/"
           className={`filter__link ${filter === 'all' ? 'selected' : ''}`}
           data-cy="FilterLinkAll"
@@ -45,7 +77,7 @@ export const Footer = ({ todos, onFilterChange, filter }: Props) => {
           onClick={() => onFilterChange('completed')}
         >
           Completed
-        </a>
+        </a> */}
       </nav>
 
       {/* this button should be disabled if there are no completed todos */}

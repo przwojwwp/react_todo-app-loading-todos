@@ -72,7 +72,11 @@ export const App: React.FC = () => {
           onToggleTodoStatus={handleToggleTodoStatus}
         />
         {todos.length > 0 && (
-          <Footer todos={todos} filter={filter} onFilterChange={handleSetFilter} />
+          <Footer
+            todos={todos}
+            filter={filter}
+            onFilterChange={handleSetFilter}
+          />
         )}
       </div>
 
