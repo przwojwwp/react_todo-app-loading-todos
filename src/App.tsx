@@ -9,18 +9,12 @@ import { Footer } from './components/Footer';
 import { Header } from './components/Header';
 import { Todo } from './types/Todo';
 import { ErrorMessage } from './types/Error';
+import { Filter } from './types/Filter';
 
 export const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [errorMessage, setErrorMessage] = useState<ErrorMessage | null>(null);
-
-  const handleToggleTodoStatus = (id: number) => {
-    setTodos(prevState =>
-      prevState.map(todo =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo,
-      ),
-    );
-  };
+  const [filter, setFilter] = useState<Filter>('all');
 
   useEffect(() => {
     const loadTodos = async () => {
@@ -44,14 +38,42 @@ export const App: React.FC = () => {
     return <UserWarning />;
   }
 
+  const handleSetFilter = (filterType: Filter) => {
+    setFilter(filterType);
+  };
+
+  const filteredTodos = todos.filter(todo => {
+    switch (filter) {
+      case 'active':
+        return !todo.completed;
+      case 'completed':
+        return todo.completed;
+      default:
+        return true;
+    }
+  });
+
+  const handleToggleTodoStatus = (id: number) => {
+    setTodos(prevState =>
+      prevState.map(todo =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo,
+      ),
+    );
+  };
+
   return (
     <div className="todoapp">
       <h1 className="todoapp__title">todos</h1>
 
       <div className="todoapp__content">
         <Header />
-        <TodoList todos={todos} onToggleTodoStatus={handleToggleTodoStatus} />
-        {todos.length > 0 && <Footer todos={todos} />}
+        <TodoList
+          todos={filteredTodos}
+          onToggleTodoStatus={handleToggleTodoStatus}
+        />
+        {todos.length > 0 && (
+          <Footer todos={todos} filter={filter} onFilterChange={handleSetFilter} />
+        )}
       </div>
 
       {/* DON'T use conditional rendering to hide the notification */}
