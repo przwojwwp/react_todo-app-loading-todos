@@ -1,10 +1,18 @@
-export const Footer = () => {
+import { Todo } from '../../types/Todo';
+
+type Props = {
+  todos: Todo[];
+};
+
+export const Footer = ({ todos }: Props) => {
+  const countOfNotCompletedTodos = todos.filter(todo => !todo.completed).length;
+
   return (
     <footer className="todoapp__footer" data-cy="Footer">
       {/* Hide the footer if there are no todos */}
 
       <span className="todo-count" data-cy="TodosCounter">
-        3 items left
+        {countOfNotCompletedTodos} items left
       </span>
 
       {/* Active link should have the 'selected' class */}

@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import React, { useEffect, useState } from 'react';
@@ -7,9 +8,11 @@ import { TodoList } from './components/TodoList';
 import { Footer } from './components/Footer';
 import { Header } from './components/Header';
 import { Todo } from './types/Todo';
+import { ErrorMessage } from './types/Error';
 
 export const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
+  const [errorMessage, setErrorMessage] = useState<ErrorMessage | null>(null);
 
   const handleToggleTodoStatus = (id: number) => {
     setTodos(prevState =>
@@ -21,9 +24,17 @@ export const App: React.FC = () => {
 
   useEffect(() => {
     const loadTodos = async () => {
-      const loadedTodos = await getTodos();
+      try {
+        const loadedTodos = await getTodos();
 
-      setTodos(loadedTodos);
+        setTodos(loadedTodos);
+      } catch (err) {
+        setErrorMessage('Unable to load todos');
+      } finally {
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 3000);
+      }
     };
 
     loadTodos();
@@ -40,18 +51,18 @@ export const App: React.FC = () => {
       <div className="todoapp__content">
         <Header />
         <TodoList todos={todos} onToggleTodoStatus={handleToggleTodoStatus} />
-        <Footer />
+        {todos.length > 0 && <Footer todos={todos} />}
       </div>
 
       {/* DON'T use conditional rendering to hide the notification */}
       {/* Add the 'hidden' class to hide the message smoothly */}
       <div
         data-cy="ErrorNotification"
-        className="notification is-danger is-light has-text-weight-normal"
+        className={`notification is-danger is-light has-text-weight-normal ${errorMessage ? '' : 'hidden'}`}
       >
         <button data-cy="HideErrorButton" type="button" className="delete" />
         {/* show only one message at a time */}
-        Unable to load todos
+        {/* Unable to load todos
         <br />
         Title should not be empty
         <br />
@@ -59,7 +70,8 @@ export const App: React.FC = () => {
         <br />
         Unable to delete a todo
         <br />
-        Unable to update a todo
+        Unable to update a todo */}
+        {errorMessage}
       </div>
     </div>
   );

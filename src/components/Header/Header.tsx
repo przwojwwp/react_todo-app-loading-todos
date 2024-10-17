@@ -1,4 +1,8 @@
+import { useState } from 'react';
+
 export const Header = () => {
+  const [newTodoTitle, setNewTodoTitle] = useState('');
+
   return (
     <header className="todoapp__header">
       {/* this button should have `active` class only if all todos are completed */}
@@ -15,6 +19,9 @@ export const Header = () => {
           type="text"
           className="todoapp__new-todo"
           placeholder="What needs to be done?"
+          value={newTodoTitle}
+          onChange={e => setNewTodoTitle(e.target.value)}
+          autoFocus
         />
       </form>
     </header>
