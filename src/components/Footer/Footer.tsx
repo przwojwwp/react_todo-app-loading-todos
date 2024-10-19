@@ -7,29 +7,29 @@ type Props = {
   filter: Filter;
 };
 
+const filterOptions: {
+  label: string;
+  value: Filter;
+  href: string;
+  dataCy: string;
+}[] = [
+  { label: 'All', value: 'all', href: '#/', dataCy: 'FilterLinkAll' },
+  {
+    label: 'Active',
+    value: 'active',
+    href: '#/active',
+    dataCy: 'FilterLinkActive',
+  },
+  {
+    label: 'Completed',
+    value: 'completed',
+    href: '#/completed',
+    dataCy: 'FilterLinkCompleted',
+  },
+];
+
 export const Footer = ({ todos, onFilterChange, filter }: Props) => {
   const countOfNotCompletedTodos = todos.filter(todo => !todo.completed).length;
-
-  const filterOptions: {
-    label: string;
-    value: Filter;
-    href: string;
-    dataCy: string;
-  }[] = [
-    { label: 'All', value: 'all', href: '#/', dataCy: 'FilterLinkAll' },
-    {
-      label: 'Active',
-      value: 'active',
-      href: '#/active',
-      dataCy: 'FilterLinkActive',
-    },
-    {
-      label: 'Completed',
-      value: 'completed',
-      href: '#/completed',
-      dataCy: 'FilterLinkCompleted',
-    },
-  ];
 
   return (
     <footer className="todoapp__footer" data-cy="Footer">
