@@ -10,11 +10,14 @@ import { Header } from './components/Header';
 import { Todo } from './types/Todo';
 import { ErrorMessage } from './types/Error';
 import { Filter } from './types/Filter';
+import classNames from 'classnames';
 
 export const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [errorMessage, setErrorMessage] = useState<ErrorMessage | null>(null);
   const [filter, setFilter] = useState<Filter>('all');
+
+  const activeTodos = todos.filter(todo => !todo.completed).length;
 
   useEffect(() => {
     const loadTodos = async () => {
@@ -73,7 +76,7 @@ export const App: React.FC = () => {
         />
         {todos.length > 0 && (
           <Footer
-            todos={todos}
+            activeTodos={activeTodos}
             filter={filter}
             onFilterChange={handleSetFilter}
           />
@@ -84,7 +87,12 @@ export const App: React.FC = () => {
       {/* Add the 'hidden' class to hide the message smoothly */}
       <div
         data-cy="ErrorNotification"
-        className={`notification is-danger is-light has-text-weight-normal ${errorMessage ? '' : 'hidden'}`}
+        className={classNames(
+          'notification is-danger is-light has-text-weight-normal',
+          {
+            hidden: !errorMessage,
+          },
+        )}
       >
         <button data-cy="HideErrorButton" type="button" className="delete" />
         {/* show only one message at a time */}
